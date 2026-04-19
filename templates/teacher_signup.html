@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Signup — Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Inter',sans-serif;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 50%,#fff7ed 100%);
+}
+.back-link{position:absolute;top:28px;left:32px;display:flex;align-items:center;gap:6px;color:#9ca3af;text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s;}
+.back-link:hover{color:#1a1a2e;}
+.back-link svg{width:16px;height:16px;}
+.signup-card{width:400px;padding:44px;background:#fff;border:1px solid #e5e7eb;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.06);}
+.signup-card h1{font-size:24px;font-weight:700;color:#1a1a2e;margin-bottom:4px;letter-spacing:-0.5px;}
+.signup-card .sub{font-size:13px;color:#9ca3af;margin-bottom:32px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;}
+.form-group input{width:100%;padding:12px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;color:#1a1a2e;font-size:14px;font-family:inherit;transition:all 0.2s;outline:none;}
+.form-group input::placeholder{color:#9ca3af;}
+.form-group input:focus{border-color:#d97706;background:#fff;box-shadow:0 0 0 3px rgba(217,119,6,0.08);}
+.submit-btn{width:100%;padding:13px;margin-top:8px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;font-size:14px;font-weight:600;font-family:inherit;transition:all 0.25s;}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(217,119,6,0.25);}
+.card-footer{margin-top:24px;text-align:center;font-size:13px;color:#9ca3af;}
+.card-footer a{color:#d97706;text-decoration:none;font-weight:500;}
+.card-footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<a href="/teacher_login" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to login</a>
+<div class="signup-card">
+  <h1>Create Teacher Account</h1>
+  <p class="sub">Sign up to manage and track student performance</p>
+  <form method="POST">
+    <div class="form-group"><label for="name">Full name</label><input type="text" id="name" name="name" placeholder="Dr. Jane Smith" required></div>
+    <div class="form-group"><label for="email">Email address</label><input type="email" id="email" name="email" placeholder="you@school.edu" required></div>
+    <div class="form-group"><label for="password">Password</label><input type="password" id="password" name="password" placeholder="Create a password" required></div>
+    <button type="submit" class="submit-btn">Create Account</button>
+  </form>
+  <div class="card-footer">Already have an account? <a href="/teacher_login">Sign in</a></div>
+</div>
+</body>
+</html>

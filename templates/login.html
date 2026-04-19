@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Behaviour Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:#ffffff;color:#1a1a2e;overflow-x:hidden;}
+
+/* ── NAVBAR ── */
+nav{
+  position:fixed;top:0;width:100%;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 48px;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid #e5e7eb;
+  transition:all 0.3s;
+}
+.logo{font-size:20px;font-weight:700;letter-spacing:-0.5px;}
+.logo span{background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{color:#6b7280;text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:#1a1a2e;}
+.nav-cta{
+  padding:8px 20px;border:none;border-radius:8px;cursor:pointer;
+  background:linear-gradient(135deg,#4f46e5,#7c3aed);
+  color:#fff;font-size:13px;font-weight:600;font-family:inherit;
+  transition:all 0.2s;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(79,70,229,0.3);}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 48px 80px;
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#f8f9ff 0%,#eef2ff 50%,#faf5ff 100%);
+}
+.hero::before{
+  content:'';position:absolute;top:-50%;right:-20%;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(79,70,229,0.06),transparent 70%);
+  pointer-events:none;
+}
+.hero-content{max-width:640px;position:relative;z-index:1;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:50px;
+  background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.15);
+  color:#4f46e5;font-size:12px;font-weight:600;
+  margin-bottom:24px;letter-spacing:0.5px;text-transform:uppercase;
+}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#4f46e5;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.hero h1{font-size:56px;font-weight:800;line-height:1.1;letter-spacing:-2px;margin-bottom:20px;color:#1a1a2e;}
+.hero h1 span{background:linear-gradient(135deg,#4f46e5,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:17px;line-height:1.7;color:#6b7280;margin-bottom:36px;max-width:480px;}
+.hero-actions{display:flex;gap:12px;}
+.btn-primary{
+  padding:12px 28px;border:none;border-radius:10px;cursor:pointer;
+  background:linear-gradient(135deg,#4f46e5,#7c3aed);
+  color:#fff;font-size:14px;font-weight:600;font-family:inherit;
+  transition:all 0.25s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,0.3);}
+.btn-secondary{
+  padding:12px 28px;border:1px solid #d1d5db;border-radius:10px;
+  cursor:pointer;background:#fff;
+  color:#374151;font-size:14px;font-weight:500;font-family:inherit;
+  transition:all 0.25s;
+}
+.btn-secondary:hover{background:#f9fafb;border-color:#9ca3af;}
+
+.hero-visual{
+  position:absolute;right:48px;top:50%;transform:translateY(-50%);
+  width:460px;height:360px;border-radius:20px;overflow:hidden;
+  border:1px solid #e5e7eb;z-index:1;
+  box-shadow:0 20px 60px rgba(0,0,0,0.08);
+}
+.hero-visual img{width:100%;height:100%;object-fit:cover;}
+
+/* ── STATS ── */
+.stats{
+  display:flex;justify-content:center;gap:64px;
+  padding:48px;background:#fff;
+  border-top:1px solid #f3f4f6;
+  border-bottom:1px solid #f3f4f6;
+}
+.stat{text-align:center;}
+.stat-value{font-size:36px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-label{font-size:13px;color:#9ca3af;margin-top:4px;font-weight:500;}
+
+/* ── SECTIONS ── */
+section{padding:100px 48px;}
+section:nth-child(even){background:#f9fafb;}
+section:nth-child(odd){background:#fff;}
+section h2{font-size:36px;font-weight:700;text-align:center;letter-spacing:-1px;margin-bottom:12px;color:#1a1a2e;}
+section .subtitle{text-align:center;color:#6b7280;font-size:15px;margin-bottom:56px;max-width:500px;margin-left:auto;margin-right:auto;}
+
+/* ── FEATURE CARDS ── */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto;}
+.feature-card{
+  padding:32px;border-radius:16px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  transition:all 0.3s;
+}
+.feature-card:hover{
+  transform:translateY(-4px);
+  border-color:#c7d2fe;
+  box-shadow:0 20px 40px rgba(0,0,0,0.06);
+}
+.feature-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:20px;
+}
+.feature-card:nth-child(1) .feature-icon{background:rgba(79,70,229,0.08);color:#4f46e5;}
+.feature-card:nth-child(2) .feature-icon{background:rgba(234,179,8,0.08);color:#d97706;}
+.feature-card:nth-child(3) .feature-icon{background:rgba(16,185,129,0.08);color:#059669;}
+.feature-card h3{font-size:16px;font-weight:600;margin-bottom:8px;color:#1a1a2e;}
+.feature-card p{font-size:13px;color:#6b7280;line-height:1.6;}
+
+#analytics .feature-card:nth-child(1) .feature-icon{background:rgba(59,130,246,0.08);color:#2563eb;}
+#analytics .feature-card:nth-child(2) .feature-icon{background:rgba(239,68,68,0.08);color:#dc2626;}
+#analytics .feature-card:nth-child(3) .feature-icon{background:rgba(168,85,247,0.08);color:#7c3aed;}
+
+#help .feature-card:nth-child(1) .feature-icon{background:rgba(236,72,153,0.08);color:#db2777;}
+#help .feature-card:nth-child(2) .feature-icon{background:rgba(20,184,166,0.08);color:#0d9488;}
+#help .feature-card:nth-child(3) .feature-icon{background:rgba(251,146,60,0.08);color:#ea580c;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);
+  justify-content:center;align-items:center;
+}
+.modal{
+  background:#fff;border:1px solid #e5e7eb;
+  border-radius:20px;padding:40px;width:360px;
+  text-align:center;position:relative;
+  animation:modalIn 0.3s ease;
+  box-shadow:0 25px 60px rgba(0,0,0,0.12);
+}
+@keyframes modalIn{from{transform:scale(0.95);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-close{
+  position:absolute;top:16px;right:20px;
+  background:none;border:none;color:#9ca3af;font-size:24px;cursor:pointer;
+  transition:color 0.2s;
+}
+.modal-close:hover{color:#1a1a2e;}
+.modal h2{font-size:22px;font-weight:700;margin-bottom:8px;color:#1a1a2e;}
+.modal p.modal-sub{font-size:13px;color:#9ca3af;margin-bottom:28px;}
+.modal-btn{
+  display:block;width:100%;padding:14px;margin-bottom:10px;
+  border:none;border-radius:12px;cursor:pointer;
+  font-size:14px;font-weight:600;font-family:inherit;
+  transition:all 0.2s;text-decoration:none;text-align:center;
+}
+.modal-btn.student{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;}
+.modal-btn.student:hover{box-shadow:0 6px 24px rgba(79,70,229,0.3);transform:translateY(-1px);}
+.modal-btn.teacher{background:#f9fafb;border:1px solid #e5e7eb;color:#374151;}
+.modal-btn.teacher:hover{background:#f3f4f6;transform:translateY(-1px);}
+.modal-footer{margin-top:20px;font-size:13px;color:#9ca3af;}
+.modal-footer a{color:#4f46e5;text-decoration:none;font-weight:500;}
+.modal-footer a:hover{text-decoration:underline;}
+
+footer{
+  text-align:center;padding:40px;
+  border-top:1px solid #f3f4f6;
+  color:#9ca3af;font-size:13px;background:#fff;
+}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  .hero{padding:100px 20px 60px;flex-direction:column;}
+  .hero h1{font-size:36px;}
+  .hero-visual{display:none;}
+  .card-grid{grid-template-columns:1fr;}
+  .stats{flex-direction:column;gap:24px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>Analyzer</span></div>
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#analytics">Analytics</a>
+    <a href="#help">Help</a>
+  </div>
+  <button class="nav-cta" onclick="openModal()">Get Started</button>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">Live Platform</div>
+    <h1>Where Data Meets <span>Learning</span></h1>
+    <p>Analyze student behaviour, attendance and academic performance with powerful, real-time analytics designed for modern education.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="openModal()">Start Analyzing</button>
+      <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView()">Learn More</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80" alt="Students collaborating">
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">500+</div><div class="stat-label">Students Tracked</div></div>
+  <div class="stat"><div class="stat-value">98%</div><div class="stat-label">Accuracy Rate</div></div>
+  <div class="stat"><div class="stat-value">5</div><div class="stat-label">Subjects Covered</div></div>
+  <div class="stat"><div class="stat-value">24/7</div><div class="stat-label">Real-time Updates</div></div>
+</div>
+
+<section id="features">
+  <h2>Core Features</h2>
+  <p class="subtitle">Everything you need to manage and analyze student performance effectively.</p>
+  <div class="card-grid">
+    <div class="feature-card"><div class="feature-icon">📋</div><h3>Data Management</h3><p>Store and manage student marks, attendance, and behaviour data in a structured database system.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔐</div><h3>Role-Based Access</h3><p>Separate secure login portals for students and teachers with individual dashboards.</p></div>
+    <div class="feature-card"><div class="feature-icon">⚡</div><h3>Live Updates</h3><p>Real-time data synchronization ensures everyone sees the latest information instantly.</p></div>
+  </div>
+</section>
+
+<section id="analytics">
+  <h2>Analytics Engine</h2>
+  <p class="subtitle">Powerful visual tools to understand and improve student outcomes.</p>
+  <div class="card-grid">
+    <div class="feature-card"><div class="feature-icon">📊</div><h3>Performance Charts</h3><p>Interactive charts visualizing marks, attendance, and behaviour patterns over time.</p></div>
+    <div class="feature-card"><div class="feature-icon">🚨</div><h3>Risk Detection</h3><p>Automatic identification of at-risk students based on performance thresholds.</p></div>
+    <div class="feature-card"><div class="feature-icon">📈</div><h3>Progress Tracking</h3><p>Monitor individual and class-wide academic progress with detailed trend analysis.</p></div>
+  </div>
+</section>
+
+<section id="help">
+  <h2>Getting Started</h2>
+  <p class="subtitle">Quick guides to help you make the most of the platform.</p>
+  <div class="card-grid">
+    <div class="feature-card"><div class="feature-icon">👩‍🏫</div><h3>For Teachers</h3><p>Add student data, manage records, and monitor class-wide performance from your dashboard.</p></div>
+    <div class="feature-card"><div class="feature-icon">🎓</div><h3>For Students</h3><p>Login to view your personal analytics dashboard with charts and risk assessments.</p></div>
+    <div class="feature-card"><div class="feature-icon">🛠</div><h3>System Guide</h3><p>Navigate features using the top menu. All data updates in real-time across the platform.</p></div>
+  </div>
+</section>
+
+<footer>&copy; 2026 Analyzer &mdash; Student Behaviour Analytics Platform</footer>
+
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <h2>Welcome back</h2>
+    <p class="modal-sub">Choose your role to continue</p>
+    <a href="/student_login" class="modal-btn student">Continue as Student</a>
+    <a href="/teacher_login" class="modal-btn teacher">Continue as Teacher</a>
+    <div class="modal-footer">New here? <a href="/student_signup">Create an account</a></div>
+  </div>
+</div>
+
+<script>
+function openModal(){document.getElementById("loginModal").style.display="flex";}
+function closeModal(){document.getElementById("loginModal").style.display="none";}
+document.getElementById("loginModal").addEventListener("click",function(e){if(e.target===this)closeModal();});
+</script>
+</body>
+</html>

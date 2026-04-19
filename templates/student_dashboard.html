@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard — Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#f9fafb;color:#1a1a2e;min-height:100vh;}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 32px;
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid #e5e7eb;
+  position:sticky;top:0;z-index:50;
+}
+.topbar-left{display:flex;align-items:center;gap:16px;}
+.topbar-logo{font-size:16px;font-weight:700;}
+.topbar-logo span{background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.topbar-divider{width:1px;height:20px;background:#e5e7eb;}
+.topbar-title{font-size:13px;color:#6b7280;font-weight:500;}
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:8px;
+  background:#f9fafb;border:1px solid #e5e7eb;
+  color:#6b7280;text-decoration:none;font-size:13px;font-weight:500;
+  transition:all 0.2s;
+}
+.back-btn:hover{background:#f3f4f6;color:#1a1a2e;}
+.back-btn svg{width:14px;height:14px;}
+
+.main{max-width:1200px;margin:0 auto;padding:32px;}
+
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{
+  padding:24px;border-radius:14px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04);
+  transition:all 0.2s;
+}
+.stat-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.06);}
+.stat-label{font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+.stat-value{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:10px;}
+.stat-card:nth-child(1) .stat-value{color:#4f46e5;}
+.stat-card:nth-child(2) .stat-value{color:#059669;}
+
+.progress-track{height:6px;border-radius:3px;background:#f3f4f6;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.8s ease;}
+.stat-card:nth-child(1) .progress-fill{background:linear-gradient(90deg,#4f46e5,#7c3aed);}
+.stat-card:nth-child(2) .progress-fill{background:linear-gradient(90deg,#059669,#10b981);}
+
+.risk-card{display:flex;flex-direction:column;justify-content:center;align-items:center;}
+.risk-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:50px;font-size:14px;font-weight:600;}
+.risk-safe{background:#ecfdf5;color:#059669;border:1px solid #a7f3d0;}
+.risk-avg{background:#fefce8;color:#ca8a04;border:1px solid #fde68a;}
+.risk-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
+.risk-sub{margin-top:8px;font-size:12px;color:#9ca3af;}
+
+.welcome-banner{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 24px;border-radius:14px;margin-bottom:20px;
+  background:linear-gradient(135deg,#eef2ff,#faf5ff);
+  border:1px solid #c7d2fe;
+}
+.welcome-info h2{font-size:20px;font-weight:700;color:#1a1a2e;margin-bottom:2px;}
+.welcome-info p{font-size:13px;color:#6b7280;}
+.welcome-info p span{font-weight:600;color:#4f46e5;}
+
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.chart-card{
+  padding:24px;border-radius:14px;
+  background:#fff;border:1px solid #e5e7eb;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04);
+}
+.chart-card h3{font-size:14px;font-weight:600;color:#374151;margin-bottom:16px;}
+.chart-card canvas{max-height:260px!important;}
+
+.chart-full{
+  padding:24px;border-radius:14px;
+  background:#fff;border:1px solid #e5e7eb;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04);
+}
+.chart-full h3{font-size:14px;font-weight:600;color:#374151;margin-bottom:16px;}
+.chart-full canvas{max-height:280px!important;}
+
+#analysisText{
+  margin-top:16px;padding:14px 20px;
+  background:#eef2ff;border:1px solid #c7d2fe;
+  border-radius:10px;font-size:13px;color:#374151;text-align:center;
+}
+
+@media(max-width:768px){
+  .stat-grid{grid-template-columns:1fr;}
+  .chart-grid{grid-template-columns:1fr;}
+  .main{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo"><span>Analyzer</span></div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-title">Student Dashboard</div>
+  </div>
+  <a href="/" class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Logout
+  </a>
+</div>
+
+<div class="main">
+  <div class="welcome-banner">
+    <div class="welcome-info">
+      <h2>Welcome, {{ student_name | default('Student') }}</h2>
+      <p>Roll No: <span>{{ roll_no | default('N/A') }}</span> &nbsp;·&nbsp; {{ student_email | default('') }}</p>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Behaviour Score</div>
+      <div class="stat-value">{{ behaviour | default(0) }}%</div>
+      <div class="progress-track"><div class="progress-fill" id="behaviourBar"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Academic Marks</div>
+      <div class="stat-value">{{ marks | default(0) }}%</div>
+      <div class="progress-track"><div class="progress-fill" id="marksBar"></div></div>
+    </div>
+    <div class="stat-card risk-card">
+      <div class="stat-label">Risk Assessment</div>
+      {% if marks < 40 %}
+      <div class="risk-badge risk-danger">⚠ At Risk</div>
+      <div class="risk-sub">Immediate attention required</div>
+      {% elif marks < 60 %}
+      <div class="risk-badge risk-avg">● Average</div>
+      <div class="risk-sub">Room for improvement</div>
+      {% else %}
+      <div class="risk-badge risk-safe">✓ On Track</div>
+      <div class="risk-sub">Performance is satisfactory</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card"><h3>Marks vs Attendance Trend</h3><canvas id="trendChart"></canvas></div>
+    <div class="chart-card"><h3>Performance Breakdown</h3><canvas id="performanceChart"></canvas></div>
+  </div>
+
+  <div class="chart-full">
+    <h3>Subject-wise Performance</h3>
+    <canvas id="subjectChart"></canvas>
+    <div id="analysisText"></div>
+  </div>
+</div>
+
+<script>
+Chart.defaults.color = '#6b7280';
+Chart.defaults.borderColor = '#f3f4f6';
+Chart.defaults.font.family = 'Inter';
+
+const marks = Number("{{ marks | default(0) }}");
+const attendance = Number("{{ attendance | default(0) }}");
+const behaviour = Number("{{ behaviour | default(0) }}");
+
+document.getElementById("marksBar").style.width = marks + "%";
+document.getElementById("behaviourBar").style.width = behaviour + "%";
+
+new Chart(document.getElementById("trendChart"), {
+  type:"line",
+  data:{
+    labels:["Jan","Feb","Mar","Apr","May","Jun"],
+    datasets:[
+      {label:"Marks",data:[60,65,70,75,80,marks],borderColor:"#4f46e5",backgroundColor:"rgba(79,70,229,0.06)",fill:true,tension:0.4,borderWidth:2,pointRadius:3,pointBackgroundColor:"#4f46e5"},
+      {label:"Attendance",data:[65,70,75,80,85,attendance],borderColor:"#059669",backgroundColor:"rgba(5,150,105,0.06)",fill:true,tension:0.4,borderWidth:2,pointRadius:3,pointBackgroundColor:"#059669"}
+    ]
+  },
+  options:{plugins:{legend:{labels:{boxWidth:12,padding:16,usePointStyle:true}}},scales:{x:{grid:{display:false}},y:{grid:{color:'#f3f4f6'}}}}
+});
+
+new Chart(document.getElementById("performanceChart"), {
+  type:"doughnut",
+  data:{
+    labels:["Marks","Attendance","Behaviour"],
+    datasets:[{data:[marks,attendance,behaviour],backgroundColor:["#4f46e5","#059669","#d97706"],borderWidth:0,spacing:4,borderRadius:6}]
+  },
+  options:{cutout:'65%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14,usePointStyle:true}}}}
+});
+
+const subjects = ["Maths","DBMS","OS","MDM","CT"];
+const subjectMarks = [
+  Number("{{ maths | default(0) }}"),
+  Number("{{ dbms | default(0) }}"),
+  Number("{{ os | default(0) }}"),
+  Number("{{ mdm | default(0) }}"),
+  Number("{{ ct | default(0) }}")
+];
+
+new Chart(document.getElementById("subjectChart"), {
+  type:"bar",
+  data:{
+    labels:subjects,
+    datasets:[{label:"Marks",data:subjectMarks,backgroundColor:["rgba(79,70,229,0.75)","rgba(220,38,38,0.75)","rgba(5,150,105,0.75)","rgba(124,58,237,0.75)","rgba(217,119,6,0.75)"],borderRadius:8,borderSkipped:false}]
+  },
+  options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#f3f4f6'},beginAtZero:true}}}
+});
+
+let max = Math.max(...subjectMarks);
+let min = Math.min(...subjectMarks);
+let highSubject = subjects[subjectMarks.indexOf(max)];
+let lowSubject = subjects[subjectMarks.indexOf(min)];
+document.getElementById("analysisText").innerHTML =
+  "Strongest: <strong style='color:#4f46e5'>" + highSubject + " (" + max + "%)</strong> &nbsp;·&nbsp; Needs improvement: <strong style='color:#dc2626'>" + lowSubject + " (" + min + "%)</strong>";
+</script>
+</body>
+</html>
